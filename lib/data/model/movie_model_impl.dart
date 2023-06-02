@@ -3,6 +3,7 @@ import 'package:netowrk_persistent/network/data_agent/movie_data_agent.dart';
 import 'package:netowrk_persistent/network/data_agent/movie_data_agent_impl.dart';
 import 'package:netowrk_persistent/persistent/movie_dao/movie_dao.dart';
 import 'package:netowrk_persistent/persistent/movie_dao/movie_dao_impl.dart';
+import 'package:stream_transform/stream_transform.dart';
 
 import 'movie_model.dart';
 
@@ -26,6 +27,8 @@ class MovieModelImpl extends MovieModel {
       });
 
   @override
-  List<MovieVO>? getMovieListFromDataBase() =>
-      _movieDAO.getMovieListFromDataBase();
+  Stream<List<MovieVO>?> getMovieListFromDataBase() => _movieDAO
+      .watchMovieBox()
+      .startWith(_movieDAO.getMovieListFromDataBaseStream())
+      .map((event) => _movieDAO.getMovieListFromDataBase());
 }

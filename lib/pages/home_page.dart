@@ -17,14 +17,17 @@ class _HomePageState extends State<HomePage> {
   final MovieModel _movieModel = MovieModelImpl();
   List<MovieVO> _getNowPlayingMovieList = [];
 
+  ///No Data===> Existing Data State
   @override
   void initState() {
     ///Fetch NetworkCall and Save to Database
-    _movieModel.getNowPlayingMovieList().then((value) {
-      final value = _movieModel.getMovieListFromDataBase();
+    _movieModel.getNowPlayingMovieList();
+
+    ///Listen DataBase Event
+    _movieModel.getMovieListFromDataBase().listen((event) {
       if (mounted) {
         setState(() {
-          _getNowPlayingMovieList = value ?? [];
+          _getNowPlayingMovieList = event ?? [];
         });
       }
     });

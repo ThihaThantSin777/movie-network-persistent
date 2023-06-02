@@ -21,4 +21,11 @@ class MovieDAOImpl extends MovieDAO {
   }
 
   Box<MovieVO> _movieBox() => Hive.box<MovieVO>(kBoxNameForMovieVO);
+
+  @override
+  Stream watchMovieBox() => _movieBox().watch();
+
+  @override
+  Stream<List<MovieVO>?> getMovieListFromDataBaseStream() =>
+      Stream.value(getMovieListFromDataBase());
 }
