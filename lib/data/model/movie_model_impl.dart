@@ -1,6 +1,8 @@
 import 'package:netowrk_persistent/data/vos/movie_vo.dart';
 import 'package:netowrk_persistent/network/data_agent/movie_data_agent.dart';
 import 'package:netowrk_persistent/network/data_agent/movie_data_agent_impl.dart';
+import 'package:netowrk_persistent/persistent/movie_dao/movie_dao.dart';
+import 'package:netowrk_persistent/persistent/movie_dao/movie_dao_impl.dart';
 
 import 'movie_model.dart';
 
@@ -12,8 +14,18 @@ class MovieModelImpl extends MovieModel {
   factory MovieModelImpl() => _singleton;
 
   final MovieDataAgent _movieDataAgent = MovieDataAgentImpl();
+  final MovieDAO _movieDAO = MovieDAOImpl();
 
   @override
   Future<List<MovieVO>?> getNowPlayingMovieList() =>
-      _movieDataAgent.getNowPlayingMovieList();
+      _movieDataAgent.getNowPlayingMovieList().then((value) {
+        if (value != null) {
+          _movieDAO.save(value);
+        }
+        return value;
+      });
+
+  @override
+  List<MovieVO>? getMovieListFromDataBase() =>
+      _movieDAO.getMovieListFromDataBase();
 }

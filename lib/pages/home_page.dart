@@ -19,13 +19,16 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    ///Fetch NetworkCall and Save to Database
     _movieModel.getNowPlayingMovieList().then((value) {
+      final value = _movieModel.getMovieListFromDataBase();
       if (mounted) {
         setState(() {
           _getNowPlayingMovieList = value ?? [];
         });
       }
     });
+
     super.initState();
   }
 
